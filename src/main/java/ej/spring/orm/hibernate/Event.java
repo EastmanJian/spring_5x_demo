@@ -25,6 +25,9 @@ package ej.spring.orm.hibernate;
 
 import java.util.Date;
 
+/**
+ * Entity bean
+ */
 public class Event {
 	private Long id;
 

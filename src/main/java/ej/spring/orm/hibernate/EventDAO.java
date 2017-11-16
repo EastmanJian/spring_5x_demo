@@ -8,6 +8,7 @@ import java.util.List;
 
 public class EventDAO {
 
+    //sessionFactory will be injected by Spring
     private SessionFactory sessionFactory;
 
     public void setSessionFactory(SessionFactory sessionFactory) {

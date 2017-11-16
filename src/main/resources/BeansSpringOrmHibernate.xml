@@ -5,16 +5,27 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="eventDataObj" class="ej.spring.orm.hibernate.EventDAO" destroy-method="close">
+        <!-- Inject Hibernate SessionFactory into the application DAO -->
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
 
+    <!--
+     The DriverManagerDataSource class should only be used for testing purposes since it does not provide pooling and
+     will perform poorly when multiple requests for a connection are made.
+     For production, you obtain a data source from JNDI or you configure your own with a connection pool implementation
+     provided by a third party. Popular implementations are Apache Jakarta Commons DBCP and C3P0.
+    -->
     <bean id="myDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
         <property name="driverClassName" value="org.h2.Driver"/>
-        <property name="url" value="jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1;MVCC=TRUE"/>
+        <property name="url" value="jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1;MVCC=TRUE"/> <!-- Use H2 in-memory DB in this example -->
         <property name="username" value="sa"/>
         <property name="password" value=""/>
     </bean>
 
+    <!--
+     The Spring LocalSessionFactoryBean automatically creates the Hibernate SessionFactory for you. So you don't need
+     to write codes to create SessionFactory using Hibernate API StandardServiceRegistry and MetadataSources etc.
+    -->
     <bean id="mySessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
         <property name="dataSource" ref="myDataSource"/>
         <property name="mappingResources">
@@ -22,6 +33,10 @@
                 <value>Event.hbm.xml</value>
             </list>
         </property>
+        <!--
+          Spring integrates the Hibernate config file hibernate.cfg.xml as hibernateProperties here. You don't need
+          to provide hibernate.cfg.xml anymore.
+        -->
         <property name="hibernateProperties">
             <value>
                 hibernate.dialect=org.hibernate.dialect.HSQLDialect
